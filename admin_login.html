@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - BloodBridge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #dc2626;
+            --accent-green: #16a34a;
+            --accent-green-dark: #15803d;
+            --bg-light: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --glow-green: rgba(22, 163, 74, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #f1f5f9 50%, #eff6ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text-primary);
+            position: relative;
+        }
+
+        /* Animated Background */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .pulse-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--glow-green) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        .pulse-1 {
+            width: 400px;
+            height: 400px;
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .pulse-2 {
+            width: 500px;
+            height: 500px;
+            bottom: -150px;
+            right: -150px;
+            animation-delay: 2s;
+        }
+
+        .pulse-3 {
+            width: 300px;
+            height: 300px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: 4s;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 0.6;
+            }
+        }
+
+        .form-container {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 48px 40px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .admin-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-green-dark) 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px var(--glow-green);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .admin-icon svg {
+            width: 45px;
+            height: 45px;
+            fill: white;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--accent-green) 0%, #86efac 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        label .required {
+            color: var(--primary-red);
+            margin-left: 3px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 16px;
+            background: #f8fafc;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 15px;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input[type="text"]::placeholder,
+        input[type="password"]::placeholder {
+            color: var(--text-muted);
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 3px var(--glow-green);
+            background: white;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-green-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px var(--glow-green);
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--glow-green);
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--accent-green);
+        }
+
+        .error-message {
+            color: var(--primary-red);
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.05) 100%);
+            color: #15803d;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 32px 24px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .admin-icon {
+                width: 60px;
+                height: 60px;
+            }
+
+            .admin-icon svg {
+                width: 35px;
+                height: 35px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-animation">
+        <div class="pulse-circle pulse-1"></div>
+        <div class="pulse-circle pulse-2"></div>
+        <div class="pulse-circle pulse-3"></div>
+    </div>
+
+    <div class="form-container">
+        <div class="header">
+            <div class="admin-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" />
+                </svg>
+            </div>
+            <h1>Admin Login</h1>
+            <p class="subtitle">Secure access to admin panel</p>
+        </div>
+
+        <form id="adminForm">
+            <div class="form-group">
+                <label for="username">Username <span class="required">*</span></label>
+                <input type="text" id="username" name="username" placeholder="Enter admin username" required>
+                <div class="error-message" id="usernameError">Please enter username</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password <span class="required">*</span></label>
+                <input type="password" id="password" name="password" placeholder="Enter admin password" required>
+                <div class="error-message" id="passwordError">Please enter password</div>
+            </div>
+
+            <button type="submit" class="login-btn">
+                🔐 Login to Admin Panel
+            </button>
+
+            <div class="success-message" id="successMessage">
+                ✓ Login successful! Redirecting...
+            </div>
+        </form>
+
+        <a href="role_selection.html" class="back-link">← Back to Role Selection</a>
+    </div>
+
+    <script>
+        const form = document.getElementById('adminForm');
+        const successMessage = document.getElementById('successMessage');
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            document.querySelectorAll('.error-message').forEach(m => m.style.display = 'none');
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            let valid = true;
+
+            if (!username) { document.getElementById('usernameError').style.display = 'block'; valid = false; }
+            if (!password) { document.getElementById('passwordError').style.display = 'block'; valid = false; }
+            if (!valid) return;
+
+            try {
+                const res = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    sessionStorage.setItem('bb_admin', username);
+                    successMessage.style.display = 'block';
+                    setTimeout(() => window.location.href = 'admin_dashboard.html', 1200);
+                } else {
+                    document.getElementById('passwordError').textContent = 'Invalid username or password';
+                    document.getElementById('passwordError').style.display = 'block';
+                }
+            } catch (err) {
+                document.getElementById('passwordError').textContent = 'Cannot connect to server. Is Flask running?';
+                document.getElementById('passwordError').style.display = 'block';
+            }
+        });
+
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', function () {
+                const el = document.getElementById(this.id + 'Error');
+                if (el && this.value.trim()) el.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+
+</html>

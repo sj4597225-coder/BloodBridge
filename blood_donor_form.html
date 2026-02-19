@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Donor Registration - BloodBridge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #dc2626;
+            --primary-red-dark: #b91c1c;
+            --primary-red-light: #ef4444;
+            --accent-blue: #2563eb;
+            --bg-light: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --glow-red: rgba(220, 38, 38, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #fef2f2 0%, #f1f5f9 50%, #eff6ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text-primary);
+            position: relative;
+        }
+
+        /* Animated Background */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .pulse-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--glow-red) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        .pulse-1 {
+            width: 400px;
+            height: 400px;
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .pulse-2 {
+            width: 500px;
+            height: 500px;
+            bottom: -150px;
+            right: -150px;
+            animation-delay: 2s;
+        }
+
+        .pulse-3 {
+            width: 300px;
+            height: 300px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: 4s;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 0.6;
+            }
+        }
+
+        .form-container {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 48px 40px;
+            max-width: 550px;
+            width: 100%;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 20px 40px rgba(0, 0, 0, 0.08);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .blood-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px var(--glow-red);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .blood-icon svg {
+            width: 45px;
+            height: 45px;
+            fill: white;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--primary-red-light) 0%, var(--accent-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        label .required {
+            color: var(--primary-red-light);
+            margin-left: 3px;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            background: #f8fafc;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 15px;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input[type="text"]::placeholder,
+        input[type="tel"]::placeholder,
+        input[type="email"]::placeholder {
+            color: var(--text-muted);
+        }
+
+        input[type="text"]:focus,
+        input[type="tel"]:focus,
+        input[type="email"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 3px var(--glow-red);
+            background: white;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        select option {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        /* Upload Area */
+        .upload-area-small {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: #f8fafc;
+        }
+
+        .upload-area-small:hover {
+            border-color: var(--primary-red);
+            background: #fff1f2;
+            transform: scale(1.01);
+        }
+
+        .upload-area-small.drag-over {
+            border-color: var(--primary-red-light);
+            background: #fee2e2;
+            transform: scale(1.02);
+        }
+
+        .upload-icon-small {
+            width: 40px;
+            height: 40px;
+            color: var(--primary-red);
+            margin: 0 auto 10px;
+        }
+
+        .upload-text-small {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .file-info-small {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .preview-area-small img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 12px;
+        }
+
+        .change-btn-small {
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .change-btn-small:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--glow-red);
+        }
+
+        .location-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .location-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--glow-red);
+        }
+
+        .location-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .checkbox-group {
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(220, 38, 38, 0.1);
+            border-radius: 12px;
+            border: 2px solid rgba(220, 38, 38, 0.2);
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            margin-right: 12px;
+            accent-color: var(--primary-red);
+        }
+
+        .checkbox-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px var(--glow-red);
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--glow-red);
+        }
+
+        .submit-btn:disabled {
+            background: linear-gradient(135deg, #475569 0%, #334155 100%);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .error-message {
+            color: var(--primary-red-light);
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.05) 100%);
+            color: #15803d;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 32px 24px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .blood-icon {
+                width: 60px;
+                height: 60px;
+            }
+
+            .blood-icon svg {
+                width: 35px;
+                height: 35px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-animation">
+        <div class="pulse-circle pulse-1"></div>
+        <div class="pulse-circle pulse-2"></div>
+        <div class="pulse-circle pulse-3"></div>
+    </div>
+
+    <div class="form-container">
+        <div class="header">
+            <div class="blood-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2C12 2 6 8 6 13C6 16.31 8.69 19 12 19C15.31 19 18 16.31 18 13C18 8 12 2 12 2Z" />
+                </svg>
+            </div>
+            <h1>Blood Donor Registration</h1>
+            <p class="subtitle">Save lives by donating blood</p>
+        </div>
+
+        <form id="donorForm">
+            <div class="form-group">
+                <label for="name">Full Name <span class="required">*</span></label>
+                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                <div class="error-message" id="nameError">Please enter your name</div>
+            </div>
+
+            <div class="form-group">
+                <label for="contact">Contact Number <span class="required">*</span></label>
+                <input type="tel" id="contact" name="contact" placeholder="Enter your contact number" required>
+                <div class="error-message" id="contactError">Please enter a valid contact number</div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address <span class="required">*</span></label>
+                <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                <div class="error-message" id="emailError">Please enter a valid email address</div>
+            </div>
+
+            <div class="form-group">
+                <label for="location">Current Location <span class="required">*</span></label>
+                <div style="display: flex; gap: 10px; align-items: stretch;">
+                    <input type="text" id="location" name="location" placeholder="Click 'Use Location' button" readonly
+                        required style="flex: 1;">
+                    <input type="hidden" id="lat" name="lat">
+                    <input type="hidden" id="lng" name="lng">
+                    <button type="button" id="useLocationBtn" class="location-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            style="width: 18px; height: 18px;">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <line x1="12" y1="2" x2="12" y2="6"></line>
+                            <line x1="12" y1="18" x2="12" y2="22"></line>
+                            <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                            <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                            <line x1="2" y1="12" x2="6" y2="12"></line>
+                            <line x1="18" y1="12" x2="22" y2="12"></line>
+                            <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                            <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                        </svg>
+                        Use Location
+                    </button>
+                </div>
+                <div class="error-message" id="locationError">Please allow location access</div>
+            </div>
+
+            <div class="form-group">
+                <label for="bloodGroup">Blood Group <span class="required">*</span></label>
+                <select id="bloodGroup" name="bloodGroup" required>
+                    <option value="">Select your blood group</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                </select>
+                <div class="error-message" id="bloodGroupError">Please select your blood group</div>
+            </div>
+
+            <div class="form-group">
+                <label for="validId">Upload Valid ID <span class="required">*</span></label>
+                <div class="upload-area-small" id="idUploadArea">
+                    <div class="upload-content-small" id="idUploadContent">
+                        <svg class="upload-icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <p class="upload-text-small">Click or drag ID image here</p>
+                        <p class="file-info-small">Aadhar / PAN / Driving License</p>
+                    </div>
+                    <div class="preview-area-small" id="idPreviewArea" style="display: none;">
+                        <img id="idPreviewImage" src="" alt="ID Preview">
+                        <button type="button" class="change-btn-small" id="idChangeBtn">Change</button>
+                    </div>
+                </div>
+                <input type="file" id="validId" name="validId" accept="image/*" hidden required>
+                <div class="error-message" id="idError">Please upload a valid ID</div>
+            </div>
+
+            <div class="checkbox-group">
+                <label class="checkbox-wrapper">
+                    <input type="checkbox" id="ageConfirm" name="ageConfirm" required>
+                    <span class="checkbox-label">I confirm that I am 18 years or older <span
+                            class="required">*</span></span>
+                </label>
+                <div class="error-message" id="ageError">You must be 18+ to donate blood</div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                Request Approval
+            </button>
+
+            <div class="success-message" id="successMessage">
+                ✓ Your request has been submitted successfully!
+            </div>
+
+            <a href="login.html" class="back-btn"
+                style="display: block; text-align: center; margin-top: 20px; padding: 12px; color: var(--text-muted); text-decoration: none; font-size: 14px; font-weight: 500; border-radius: 12px; transition: all 0.3s ease; background: #f1f5f9; border: 1px solid var(--border-color);">←
+                Go Back</a>
+        </form>
+    </div>
+
+    <script src="db.js"></script>
+    <script>
+        const form = document.getElementById('donorForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const ageConfirm = document.getElementById('ageConfirm');
+        const successMessage = document.getElementById('successMessage');
+
+        // Enable/disable submit button based on age confirmation
+        ageConfirm.addEventListener('change', function () {
+            updateSubmitButton();
+        });
+
+        function updateSubmitButton() {
+            submitBtn.disabled = !ageConfirm.checked;
+        }
+
+        updateSubmitButton();
+
+        // Geolocation Functionality
+        const locationInput = document.getElementById('location');
+        const useLocationBtn = document.getElementById('useLocationBtn');
+        let userLocation = null;
+
+        useLocationBtn.addEventListener('click', () => {
+            detectLocation();
+        });
+
+        function detectLocation() {
+            if (!navigator.geolocation) {
+                locationInput.value = '';
+                locationInput.placeholder = 'Geolocation not supported';
+                return;
+            }
+
+            locationInput.value = 'Detecting location...';
+            useLocationBtn.disabled = true;
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    userLocation = { lat, lon };
+
+                    // Store Google Maps link in location field
+                    const mapsLink = `https://www.google.com/maps?q=${lat},${lon}`;
+                    locationInput.value = mapsLink;
+
+                    // Store raw coords in hidden fields for backend calculations
+                    document.getElementById('lat').value = lat;
+                    document.getElementById('lng').value = lon;
+
+                    document.getElementById('locationError').style.display = 'none';
+                    useLocationBtn.disabled = false;
+                },
+                (error) => {
+                    locationInput.value = '';
+                    locationInput.placeholder = 'Location access denied';
+                    useLocationBtn.disabled = false;
+
+                    if (error.code === error.PERMISSION_DENIED) {
+                        alert('Please allow location access to use this feature');
+                    } else if (error.code === error.POSITION_UNAVAILABLE) {
+                        alert('Location information unavailable');
+                    } else if (error.code === error.TIMEOUT) {
+                        alert('Location request timed out');
+                    }
+                }
+            );
+        }
+
+        // ID Upload Functionality
+        const idUploadArea = document.getElementById('idUploadArea');
+        const idFileInput = document.getElementById('validId');
+        const idUploadContent = document.getElementById('idUploadContent');
+        const idPreviewArea = document.getElementById('idPreviewArea');
+        const idPreviewImage = document.getElementById('idPreviewImage');
+        const idChangeBtn = document.getElementById('idChangeBtn');
+        let selectedIdFile = null;
+
+        idUploadArea.addEventListener('click', (e) => {
+            if (e.target !== idChangeBtn && !idChangeBtn.contains(e.target)) {
+                idFileInput.click();
+            }
+        });
+
+        idChangeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            idFileInput.click();
+        });
+
+        idFileInput.addEventListener('change', (e) => {
+            handleIdFile(e.target.files[0]);
+        });
+
+        idUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            idUploadArea.classList.add('drag-over');
+        });
+
+        idUploadArea.addEventListener('dragleave', () => {
+            idUploadArea.classList.remove('drag-over');
+        });
+
+        idUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            idUploadArea.classList.remove('drag-over');
+            const file = e.dataTransfer.files[0];
+            handleIdFile(file);
+        });
+
+        function handleIdFile(file) {
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file');
+                return;
+            }
+
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File size must be less than 5MB');
+                return;
+            }
+
+            selectedIdFile = file;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                idPreviewImage.src = e.target.result;
+                idUploadContent.style.display = 'none';
+                idPreviewArea.style.display = 'block';
+
+                // Success feedback
+                idUploadArea.style.borderColor = 'var(--accent-green)';
+                idUploadArea.style.backgroundColor = 'rgba(22, 163, 74, 0.05)';
+
+                // Add success text if not already present
+                let successText = document.getElementById('uploadSuccessText');
+                if (!successText) {
+                    successText = document.createElement('p');
+                    successText.id = 'uploadSuccessText';
+                    successText.style.color = 'var(--accent-green)';
+                    successText.style.fontWeight = '600';
+                    successText.style.fontSize = '14px';
+                    successText.style.marginTop = '10px';
+                    successText.textContent = '✓ ID Uploaded Successfully';
+                    idPreviewArea.appendChild(successText);
+                }
+            };
+            reader.readAsDataURL(file);
+
+            document.getElementById('idError').style.display = 'none';
+        }
+
+        // Form validation
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            document.querySelectorAll('.error-message').forEach(msg => {
+                msg.style.display = 'none';
+            });
+
+            let isValid = true;
+
+            const name = document.getElementById('name').value.trim();
+            if (name === '') {
+                document.getElementById('nameError').style.display = 'block';
+                isValid = false;
+            }
+
+            const contact = document.getElementById('contact').value.trim();
+            if (contact === '' || contact.length < 10) {
+                document.getElementById('contactError').style.display = 'block';
+                isValid = false;
+            }
+
+            const email = document.getElementById('email').value.trim();
+            if (email === '' || !/\S+@\S+\.\S+/.test(email)) {
+                document.getElementById('emailError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (!selectedIdFile) {
+                document.getElementById('idError').style.display = 'block';
+                isValid = false;
+            }
+
+            const location = document.getElementById('location').value.trim();
+            if (location === '') {
+                document.getElementById('locationError').style.display = 'block';
+                isValid = false;
+            }
+
+            const bloodGroup = document.getElementById('bloodGroup').value;
+            if (bloodGroup === '') {
+                document.getElementById('bloodGroupError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (!ageConfirm.checked) {
+                document.getElementById('ageError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (isValid) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Submitting...';
+
+                const fd = new FormData();
+                fd.append('name', name);
+                fd.append('contact', contact);
+                fd.append('email', email);
+                fd.append('bloodGroup', bloodGroup);
+                fd.append('location', location);
+                fd.append('lat', document.getElementById('lat').value);
+                fd.append('lng', document.getElementById('lng').value);
+                fd.append('ageConfirm', ageConfirm.checked ? 'true' : 'false');
+                if (selectedIdFile) fd.append('validId', selectedIdFile);
+
+                try {
+                    const res = await fetch('/api/blood-donor', {
+                        method: 'POST',
+                        body: fd
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.success) {
+                        successMessage.style.display = 'block';
+                        setTimeout(() => {
+                            form.reset();
+                            successMessage.style.display = 'none';
+                            updateSubmitButton();
+                            selectedIdFile = null;
+                            idUploadContent.style.display = 'block';
+                            idPreviewArea.style.display = 'none';
+                            idPreviewImage.src = '';
+                        }, 3000);
+                    } else {
+                        alert('Error: ' + (data.error || 'Submission failed'));
+                    }
+                } catch (err) {
+                    alert('Cannot connect to server. Make sure Flask is running on port 5000.');
+                } finally {
+                    submitBtn.disabled = !ageConfirm.checked;
+                    submitBtn.textContent = 'Request Approval';
+                }
+            }
+        });
+
+        // Real-time validation
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('input', function () {
+                const errorId = this.id + 'Error';
+                const errorElement = document.getElementById(errorId);
+                if (errorElement && this.value.trim() !== '') {
+                    errorElement.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

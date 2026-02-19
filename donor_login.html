@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloodBridge - Donor Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #dc2626;
+            --primary-red-dark: #b91c1c;
+            --primary-red-light: #ef4444;
+            --accent-blue: #2563eb;
+            --accent-blue-dark: #1d4ed8;
+            --bg-light: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --glow-red: rgba(220, 38, 38, 0.15);
+            --glow-blue: rgba(37, 99, 235, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #fef2f2 0%, #f1f5f9 50%, #eff6ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text-primary);
+            position: relative;
+        }
+
+        /* Animated Background */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .pulse-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--glow-red) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        .pulse-1 {
+            width: 400px;
+            height: 400px;
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .pulse-2 {
+            width: 500px;
+            height: 500px;
+            bottom: -150px;
+            right: -150px;
+            background: radial-gradient(circle, var(--glow-blue) 0%, transparent 70%);
+            animation-delay: 2s;
+        }
+
+        .pulse-3 {
+            width: 300px;
+            height: 300px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: 4s;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 0.6;
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 480px;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 48px 40px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 20px 40px rgba(0, 0, 0, 0.08);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-light) 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 10px 30px var(--glow-red);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .logo-icon svg {
+            width: 45px;
+            height: 45px;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .app-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--primary-red-light) 0%, var(--accent-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .app-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        label .required {
+            color: var(--primary-red-light);
+            margin-left: 3px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 14px 16px;
+            background: #f8fafc;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 15px;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input[type="email"]::placeholder {
+            color: var(--text-muted);
+        }
+
+        input[type="email"]:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px var(--glow-blue);
+            background: white;
+        }
+
+        .otp-container {
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .otp-container.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .otp-inputs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .otp-input {
+            width: 50px;
+            height: 55px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            background: #f8fafc;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .otp-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px var(--glow-blue);
+            background: white;
+        }
+
+        .resend-timer {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .resend-btn {
+            background: none;
+            border: none;
+            color: var(--accent-blue);
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 14px;
+        }
+
+        .resend-btn:disabled {
+            color: var(--text-muted);
+            cursor: not-allowed;
+            text-decoration: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 6px 20px var(--glow-blue);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px var(--glow-blue);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            color: var(--primary-red-light);
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.05) 100%);
+            color: #16a34a;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            padding: 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: #f1f5f9;
+            border: 1px solid var(--border-color);
+        }
+
+        .back-link:hover {
+            color: var(--text-primary);
+            background: #e2e8f0;
+            border-color: #94a3b8;
+            transform: translateY(-2px);
+        }
+
+        .info-text {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-top: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .login-card {
+                padding: 32px 24px;
+            }
+
+            .app-title {
+                font-size: 24px;
+            }
+
+            .otp-input {
+                width: 45px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .otp-inputs {
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-animation">
+        <div class="pulse-circle pulse-1"></div>
+        <div class="pulse-circle pulse-2"></div>
+        <div class="pulse-circle pulse-3"></div>
+    </div>
+
+    <div class="container">
+        <div class="login-card">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                            fill="white" />
+                    </svg>
+                </div>
+                <h1 class="app-title">Donor Login</h1>
+                <p class="app-subtitle">Access your donation profile</p>
+            </div>
+
+            <div class="success-message" id="successMessage"></div>
+
+            <!-- Email Login Form -->
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" placeholder="Enter your registered email" required>
+                    <div class="error-message" id="emailError">Please enter a valid email address</div>
+                </div>
+
+                <button type="submit" class="btn" id="getOtpBtn">Get OTP</button>
+            </form>
+
+            <!-- OTP Verification Form -->
+            <div class="otp-container" id="otpContainer">
+                <div class="form-group">
+                    <label>Enter OTP <span class="required">*</span></label>
+                    <div class="otp-inputs">
+                        <input type="text" class="otp-input" maxlength="1" data-index="0">
+                        <input type="text" class="otp-input" maxlength="1" data-index="1">
+                        <input type="text" class="otp-input" maxlength="1" data-index="2">
+                        <input type="text" class="otp-input" maxlength="1" data-index="3">
+                    </div>
+                    <div class="error-message" id="otpError">Please enter the complete 4-digit OTP</div>
+                </div>
+
+                <div class="resend-timer" id="resendTimer">
+                    Resend OTP in <span id="countdown">30</span>s
+                </div>
+
+                <button type="button" class="btn" id="verifyOtpBtn">Verify & Login</button>
+
+                <div class="info-text">
+                    Didn't receive OTP? <button class="resend-btn" id="resendBtn" disabled>Resend OTP</button>
+                </div>
+            </div>
+
+            <a href="blood_donor_form.html" class="back-link">← Not registered? Donate now</a>
+        </div>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const otpContainer = document.getElementById('otpContainer');
+        const getOtpBtn = document.getElementById('getOtpBtn');
+        const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+        const resendBtn = document.getElementById('resendBtn');
+        const successMessage = document.getElementById('successMessage');
+        const otpInputs = document.querySelectorAll('.otp-input');
+
+        let countdownTimer;
+        let userEmail = '';
+
+        // Email form submission
+        loginForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            // Hide all error messages
+            document.querySelectorAll('.error-message').forEach(msg => msg.style.display = 'none');
+
+            const email = document.getElementById('email').value.trim();
+            if (!email || !/\S+@\S+\.\S+/.test(email)) {
+                document.getElementById('emailError').style.display = 'block';
+                return;
+            }
+
+            // Call API to send OTP
+            getOtpBtn.disabled = true;
+            getOtpBtn.textContent = 'Sending...';
+
+            try {
+                const res = await fetch('/api/donor/login/send-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    userEmail = email;
+
+                    if (data.via === 'screen' && data.devOtp) {
+                        // Dev mode fallback
+                        successMessage.innerHTML = `🔑 Dev OTP: <b>${data.devOtp}</b> (SMTP failed)`;
+                    } else {
+                        successMessage.textContent = `✓ OTP sent to ${email}`;
+                    }
+                    successMessage.style.display = 'block';
+
+                    // Show OTP section
+                    loginForm.style.display = 'none';
+                    otpContainer.classList.add('active');
+                    startCountdown();
+                    otpInputs[0].focus();
+                } else {
+                    document.getElementById('emailError').textContent = data.error || 'Failed to send OTP';
+                    document.getElementById('emailError').style.display = 'block';
+                    getOtpBtn.disabled = false;
+                    getOtpBtn.textContent = 'Get OTP';
+                }
+            } catch (err) {
+                document.getElementById('emailError').textContent = 'Server connection failed';
+                document.getElementById('emailError').style.display = 'block';
+                getOtpBtn.disabled = false;
+                getOtpBtn.textContent = 'Get OTP';
+            }
+        });
+
+        // OTP input handling
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('input', function (e) {
+                const value = e.target.value;
+                if (!/^\d*$/.test(value)) { e.target.value = ''; return; }
+                if (value && index < otpInputs.length - 1) otpInputs[index + 1].focus();
+                document.getElementById('otpError').style.display = 'none';
+            });
+
+            input.addEventListener('keydown', function (e) {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) otpInputs[index - 1].focus();
+            });
+
+            input.addEventListener('paste', function (e) {
+                e.preventDefault();
+                const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 4);
+                pasted.split('').forEach((ch, i) => { if (otpInputs[i]) otpInputs[i].value = ch; });
+            });
+        });
+
+        // Verify OTP
+        verifyOtpBtn.addEventListener('click', async function () {
+            const enteredOTP = Array.from(otpInputs).map(input => input.value).join('');
+
+            if (enteredOTP.length !== 4) {
+                document.getElementById('otpError').style.display = 'block';
+                return;
+            }
+
+            verifyOtpBtn.disabled = true;
+            verifyOtpBtn.textContent = 'Verifying...';
+
+            try {
+                const res = await fetch('/api/donor/login/verify-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: userEmail, code: enteredOTP })
+                });
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    successMessage.innerHTML = '✓ Login successful! Redirecting...';
+                    successMessage.style.display = 'block';
+                    setTimeout(() => window.location.href = 'donor_dashboard.html', 1000);
+                } else {
+                    document.getElementById('otpError').textContent = data.error || 'Invalid OTP';
+                    document.getElementById('otpError').style.display = 'block';
+                    verifyOtpBtn.disabled = false;
+                    verifyOtpBtn.textContent = 'Verify & Login';
+                    otpInputs.forEach(i => i.value = '');
+                    otpInputs[0].focus();
+                }
+            } catch (err) {
+                document.getElementById('otpError').textContent = 'Server error';
+                document.getElementById('otpError').style.display = 'block';
+                verifyOtpBtn.disabled = false;
+                verifyOtpBtn.textContent = 'Verify & Login';
+            }
+        });
+
+        // Countdown timer
+        function startCountdown() {
+            let timeLeft = 30;
+            const countdownElement = document.getElementById('countdown');
+            resendBtn.disabled = true;
+
+            if (countdownTimer) clearInterval(countdownTimer);
+
+            document.getElementById('resendTimer').style.display = 'block';
+
+            countdownTimer = setInterval(() => {
+                timeLeft--;
+                countdownElement.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(countdownTimer);
+                    document.getElementById('resendTimer').style.display = 'none';
+                    resendBtn.disabled = false;
+                }
+            }, 1000);
+        }
+
+        // Resend OTP
+        resendBtn.addEventListener('click', async function () {
+            otpInputs.forEach(input => input.value = '');
+            resendBtn.disabled = true;
+            resendBtn.textContent = 'Sending...';
+
+            try {
+                const res = await fetch('/api/donor/login/send-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: userEmail })
+                });
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    if (data.via === 'screen' && data.devOtp) {
+                        successMessage.innerHTML = `🔑 Dev OTP: <b>${data.devOtp}</b> (SMTP failed)`;
+                    } else {
+                        successMessage.textContent = `✓ New OTP sent to ${userEmail}`;
+                    }
+                    startCountdown();
+                }
+            } catch (e) {
+                alert('Connection failed');
+            }
+            resendBtn.textContent = 'Resend OTP';
+        });
+    </script>
+</body>
+
+</html>

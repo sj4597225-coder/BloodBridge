@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloodBridge — Request Status</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f1f5f9;
+            color: #0f172a;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 20px;
+            color: #0f172a;
+            text-decoration: none;
+        }
+
+        .nav-logo svg {
+            width: 30px;
+            height: 30px;
+            fill: #dc2626;
+        }
+
+        .back-btn {
+            background: rgba(220, 38, 38, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(220, 38, 38, 0.25);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            background: rgba(220, 38, 38, 0.2);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 24px;
+        }
+
+        /* Request Summary Banner */
+        .request-banner {
+            background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 36px;
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .blood-badge {
+            background: #dc2626;
+            color: white;
+            font-size: 40px;
+            font-weight: 800;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 0 30px rgba(220, 38, 38, 0.5);
+        }
+
+        .request-details h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .detail-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .chip {
+            background: rgba(0, 0, 0, 0.04);
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 13px;
+            color: #475569;
+        }
+
+        .chip strong {
+            color: #0f172a;
+        }
+
+        .status-pill {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .status-active {
+            background: rgba(22, 163, 74, 0.1);
+            color: #16a34a;
+            border: 1px solid rgba(22, 163, 74, 0.3);
+        }
+
+        .status-pending {
+            background: rgba(217, 119, 6, 0.1);
+            color: #d97706;
+            border: 1px solid rgba(217, 119, 6, 0.3);
+        }
+
+        .status-resolved {
+            background: rgba(100, 116, 139, 0.1);
+            color: #64748b;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        /* Section Header */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .count-badge {
+            background: #dc2626;
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 20px;
+        }
+
+        .auto-refresh-label {
+            color: #64748b;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.4;
+                transform: scale(0.7);
+            }
+        }
+
+        /* Donor Cards */
+        .donors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .donor-card {
+            background: rgba(34, 197, 94, 0.05);
+            border: 1px solid rgba(34, 197, 94, 0.25);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s;
+            animation: slide-in 0.4s ease;
+        }
+
+        @keyframes slide-in {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .donor-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.15);
+        }
+
+        .donor-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #dc2626, #f97316);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 14px;
+            flex-shrink: 0;
+        }
+
+        .donor-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .donor-meta {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-top: 3px;
+        }
+
+        .donor-meta span {
+            color: #f8fafc;
+            font-weight: 600;
+        }
+
+        .donor-contact {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .contact-number {
+            color: #22c55e;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .whatsapp-btn {
+            background: rgba(37, 211, 102, 0.1);
+            color: #25d366;
+            border: 1px solid rgba(37, 211, 102, 0.3);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .whatsapp-btn:hover {
+            background: rgba(37, 211, 102, 0.2);
+        }
+
+        .accepted-time {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 10px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+
+        .empty-state .icon {
+            font-size: 56px;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: #94a3b8;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+        }
+
+        /* Also show declined section */
+        .declined-section {
+            margin-top: 36px;
+        }
+
+        .declined-section .section-title {
+            color: #64748b;
+        }
+
+        .declined-card {
+            background: rgba(100, 116, 139, 0.05);
+            border: 1px solid rgba(100, 116, 139, 0.15);
+            border-radius: 12px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .declined-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(100, 116, 139, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        /* Loading */
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(241, 245, 249, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-top-color: #dc2626;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Pending Admin Banner */
+        .pending-admin-banner {
+            background: linear-gradient(135deg, #1c1400 0%, #1e293b 100%);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .pending-steps {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0;
+            margin-top: 28px;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            min-width: 100px;
+        }
+
+        .step-dot {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .step-dot.done {
+            background: rgba(34, 197, 94, 0.15);
+            border: 2px solid #22c55e;
+            color: #22c55e;
+        }
+
+        .step-dot.active {
+            background: rgba(245, 158, 11, 0.15);
+            border: 2px solid #f59e0b;
+            color: #f59e0b;
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        .step-dot.waiting {
+            background: rgba(100, 116, 139, 0.1);
+            border: 2px dashed #475569;
+            color: #475569;
+        }
+
+        .step-label {
+            font-size: 12px;
+            color: #94a3b8;
+            text-align: center;
+        }
+
+        .step-label.done {
+            color: #22c55e;
+        }
+
+        .step-label.active {
+            color: #f59e0b;
+        }
+
+        .step-connector {
+            width: 50px;
+            height: 2px;
+            background: #334155;
+            margin-bottom: 22px;
+        }
+
+        .step-connector.done {
+            background: #22c55e;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+
+    <nav class="navbar">
+        <a href="login.html" class="nav-logo">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2C12 2 6 8 6 13C6 16.31 8.69 19 12 19C15.31 19 18 16.31 18 13C18 8 12 2 12 2Z" />
+            </svg>
+            BloodBridge
+        </a>
+        <a href="javascript:history.back()" class="back-btn">← Go Back</a>
+    </nav>
+
+    <div class="container">
+        <!-- Request Summary Banner -->
+        <div class="request-banner" id="requestBanner">
+            <div class="blood-badge" id="bloodBadge">...</div>
+            <div class="request-details">
+                <h2 id="requestTitle">Loading request...</h2>
+                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:8px;">
+                    <span class="status-pill" id="statusPill">...</span>
+                </div>
+                <div class="detail-chips" id="detailChips"></div>
+            </div>
+        </div>
+
+        <!-- Accepted Donors -->
+        <div class="section-header">
+            <div class="section-title">
+                ✅ Accepted Donors
+                <span class="count-badge" id="acceptedCount">0</span>
+            </div>
+            <div class="auto-refresh-label">
+                <div class="pulse-dot"></div>
+                Live — refreshes every 10s
+            </div>
+        </div>
+
+        <div class="donors-grid" id="donorsGrid">
+            <!-- populated by JS -->
+        </div>
+
+        <!-- Declined Donors (collapsible feeling section) -->
+        <div class="declined-section" id="declinedSection" style="display:none;">
+            <div class="section-title" style="margin-bottom:14px; color:#64748b; font-size:15px;">
+                ✗ Declined
+                <span
+                    style="background:rgba(100,116,139,0.15);color:#64748b;font-size:12px;padding:2px 10px;border-radius:20px;"
+                    id="declinedCount">0</span>
+            </div>
+            <div id="declinedGrid"></div>
+        </div>
+    </div>
+
+    <script>
+        // Parse request ID from URL
+        const params = new URLSearchParams(window.location.search);
+        const requestId = params.get('id');
+
+        if (!requestId) {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            document.querySelector('.container').innerHTML = `
+                <div class="empty-state">
+                    <div class="icon">🔍</div>
+                    <h3>No Request ID</h3>
+                    <p>Please open this page from an emergency request form.</p>
+                </div>`;
+        } else {
+            loadData();
+            setInterval(loadData, 10000);
+        }
+
+        async function loadData() {
+            try {
+                const res = await fetch(`/api/emergency/${requestId}/responses`);
+                if (!res.ok) {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    return;
+                }
+                const data = await res.json();
+                render(data);
+                document.getElementById('loadingOverlay').style.display = 'none';
+            } catch (err) {
+                console.error(err);
+                document.getElementById('loadingOverlay').style.display = 'none';
+            }
+        }
+
+        function render(data) {
+            const req = data.request;
+            const accepted = data.acceptedDonors || [];
+            const declined = data.declinedDonors || [];
+            const isPendingAdmin = req.status === 'Pending_Admin';
+
+            // Banner
+            document.getElementById('bloodBadge').textContent = req.bloodType || '?';
+            document.getElementById('requestTitle').textContent =
+                `${req.patientName || 'Patient'} @ ${req.hospitalName || 'Hospital'}`;
+
+            // Status pill
+            const statusEl = document.getElementById('statusPill');
+            if (req.status === 'Active') {
+                statusEl.textContent = '🟢 Approved & Active';
+                statusEl.className = 'status-pill status-active';
+            } else if (isPendingAdmin) {
+                statusEl.textContent = '⏳ Pending Admin Approval';
+                statusEl.className = 'status-pill status-pending';
+            } else {
+                statusEl.textContent = '✓ Resolved';
+                statusEl.className = 'status-pill status-resolved';
+            }
+
+            // Detail chips
+            document.getElementById('detailChips').innerHTML = [
+                req.unitsNeeded ? `<span class="chip">Units: <strong>${req.unitsNeeded}</strong></span>` : '',
+                req.contact ? `<span class="chip">📞 <strong>${req.contact}</strong></span>` : '',
+                req.condition ? `<span class="chip">Condition: <strong>${req.condition}</strong></span>` : '',
+                req.location ? `<span class="chip"><a href="${req.location}" target="_blank" style="color:#3b82f6;text-decoration:none;">📍 Location</a></span>` : '',
+            ].join('');
+
+            // ── Pending Admin: show progress steps instead of donor section ──
+            const sectionHeader = document.querySelector('.section-header');
+            const donorsGrid = document.getElementById('donorsGrid');
+            const declinedSec = document.getElementById('declinedSection');
+
+            if (isPendingAdmin) {
+                sectionHeader.style.display = 'none';
+                donorsGrid.style.display = 'none';
+                declinedSec.style.display = 'none';
+
+                // Show or update the pending banner
+                let banner = document.getElementById('pendingAdminBanner');
+                if (!banner) {
+                    banner = document.createElement('div');
+                    banner.id = 'pendingAdminBanner';
+                    banner.className = 'pending-admin-banner';
+                    document.querySelector('.container').appendChild(banner);
+                }
+
+                banner.innerHTML = `
+                    <div style="font-size:48px;margin-bottom:16px;">🕐</div>
+                    <h3 style="font-size:22px;font-weight:700;color:#f59e0b;margin-bottom:8px;">Request Submitted!</h3>
+                    <p style="color:#94a3b8;font-size:15px;max-width:420px;margin:0 auto;">
+                        Your emergency request is being reviewed by a BloodBridge admin.
+                        Once approved, nearby donors will be notified immediately.
+                    </p>
+                    <div class="pending-steps">
+                        <div class="step">
+                            <div class="step-dot done">✓</div>
+                            <div class="step-label done">Submitted</div>
+                        </div>
+                        <div class="step-connector done"></div>
+                        <div class="step">
+                            <div class="step-dot active">⏳</div>
+                            <div class="step-label active">Admin Review</div>
+                        </div>
+                        <div class="step-connector"></div>
+                        <div class="step">
+                            <div class="step-dot waiting">📧</div>
+                            <div class="step-label">Donors Notified</div>
+                        </div>
+                        <div class="step-connector"></div>
+                        <div class="step">
+                            <div class="step-dot waiting">🩸</div>
+                            <div class="step-label">Donor Responds</div>
+                        </div>
+                    </div>
+                    <p style="color:#475569;font-size:12px;margin-top:24px;">This page refreshes automatically every 10 seconds.</p>`;
+                return;
+            }
+
+            // ── Active: show donor cards ──
+            const pendingBanner = document.getElementById('pendingAdminBanner');
+            if (pendingBanner) pendingBanner.remove();
+            sectionHeader.style.display = '';
+            donorsGrid.style.display = '';
+
+            // Accepted donors count
+            document.getElementById('acceptedCount').textContent = accepted.length;
+
+            // Accepted grid
+            if (accepted.length === 0) {
+                donorsGrid.innerHTML = `
+                    <div class="empty-state" style="grid-column:1/-1;">
+                        <div class="icon">⏳</div>
+                        <h3>Waiting for Donors</h3>
+                        <p>Donors who accept the request will appear here in real-time.</p>
+                        <p style="margin-top:8px;font-size:12px;color:#475569;">Refreshes every 10 seconds automatically.</p>
+                    </div>`;
+            } else {
+                donorsGrid.innerHTML = accepted.map(d => donorCardHTML(d)).join('');
+            }
+
+            // Declined section
+            if (declined.length > 0) {
+                declinedSec.style.display = 'block';
+                document.getElementById('declinedCount').textContent = declined.length;
+                document.getElementById('declinedGrid').innerHTML = declined.map(d => `
+                    <div class="declined-card">
+                        <div class="declined-avatar">👤</div>
+                        <div>
+                            <div style="color:#94a3b8;font-weight:600;">${d.name || d.email}</div>
+                            <div style="font-size:12px;margin-top:2px;">Declined at ${d.respondedAt || ''}</div>
+                        </div>
+                    </div>`).join('');
+            } else {
+                declinedSec.style.display = 'none';
+            }
+        }
+
+        function donorCardHTML(d) {
+            const initial = (d.name || d.email || '?')[0].toUpperCase();
+            const waLink = d.contact
+                ? `<a href="https://wa.me/${d.contact.replace(/[^0-9]/g, '')}" target="_blank" class="whatsapp-btn">WhatsApp</a>`
+                : '';
+
+            // Confirmation section based on donation status
+            let confirmSection = '';
+            if (d.donationStatus === 'Donated') {
+                confirmSection = `<div style="margin-top:14px;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);border-radius:10px;padding:10px 14px;text-align:center;color:#4ade80;font-weight:700;">🩸 Donation Confirmed — Thank you!</div>`;
+            } else if (d.donationStatus === 'Failed') {
+                confirmSection = `<div style="margin-top:14px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:10px 14px;text-align:center;color:#f87171;font-weight:600;">❌ Donation Unsuccessful</div>`;
+            } else {
+                confirmSection = `
+                <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.07);padding-top:12px;">
+                    <p style="font-size:12px;color:#64748b;margin-bottom:10px;">Did this donor complete the donation?</p>
+                    <div style="display:flex;gap:8px;">
+                        <button onclick="confirmDonation('${requestId}','${d.email}',true)" style="flex:1;padding:9px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.4);color:#4ade80;border-radius:8px;cursor:pointer;font-weight:700;font-size:13px;">✅ Donation Successful</button>
+                        <button onclick="confirmDonation('${requestId}','${d.email}',false)" style="flex:1;padding:9px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#f87171;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px;">❌ Not Successful</button>
+                    </div>
+                </div>`;
+            }
+
+            return `
+            <div class="donor-card" id="dcard-${d.email.replace(/[@.]/g, '-')}">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <div class="donor-avatar">${initial}</div>
+                    <div>
+                        <h3>${d.name || 'Donor'}</h3>
+                        <div class="donor-meta">Blood: <span>${d.bloodGroup || '?'}</span></div>
+                    </div>
+                </div>
+                <div class="donor-contact">
+                    <div class="contact-number">📞 ${d.contact || 'N/A'}</div>
+                    ${waLink}
+                </div>
+                <div class="accepted-time">✅ Accepted at ${d.respondedAt || 'recently'}</div>
+                ${confirmSection}
+            </div>`;
+        }
+
+        async function confirmDonation(reqId, donorEmail, success) {
+            const label = success ? 'Donation Successful' : 'Not Successful';
+            if (!confirm(`Mark as "${label}" for this donor?`)) return;
+            try {
+                const r = await fetch(`/api/emergency/${reqId}/confirm-donation`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ donorEmail, success })
+                });
+                const data = await r.json();
+                if (r.ok) {
+                    loadData();
+                } else {
+                    alert('Error: ' + (data.error || 'Failed'));
+                }
+            } catch (e) {
+                alert('Cannot connect to server.');
+            }
+        }
+    </script>
+</body>
+
+</html>

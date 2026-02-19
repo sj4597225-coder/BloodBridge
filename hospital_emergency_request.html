@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Blood Request - BloodBridge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #dc2626;
+            --primary-red-dark: #b91c1c;
+            --primary-red-light: #ef4444;
+            --accent-blue: #2563eb;
+            --accent-green: #16a34a;
+            --bg-light: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --glow-red: rgba(220, 38, 38, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #fef2f2 0%, #f1f5f9 50%, #eff6ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text-primary);
+            position: relative;
+        }
+
+        /* Animated Background */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .pulse-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--glow-red) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        .pulse-1 {
+            width: 400px;
+            height: 400px;
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .pulse-2 {
+            width: 500px;
+            height: 500px;
+            bottom: -150px;
+            right: -150px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
+            animation-delay: 2s;
+        }
+
+        .pulse-3 {
+            width: 300px;
+            height: 300px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: 4s;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 0.6;
+            }
+        }
+
+        .form-container {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 48px 40px;
+            max-width: 620px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .hospital-icon {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 40px var(--glow-red);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .hospital-icon svg {
+            width: 50px;
+            height: 50px;
+            fill: white;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--primary-red-light) 0%, var(--accent-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .hospital-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, #2563eb 100%);
+            color: white;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid var(--accent-blue);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 28px;
+        }
+
+        .info-box p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .info-box strong {
+            color: var(--text-primary);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        label .required {
+            color: var(--primary-red-light);
+            margin-left: 3px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="time"],
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            background: #f8fafc;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 15px;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input[type="text"]::placeholder,
+        input[type="number"]::placeholder {
+            color: var(--text-muted);
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="time"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 3px var(--glow-red);
+            background: white;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        select option {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .location-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .location-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--glow-red);
+        }
+
+        .location-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Condition Selector */
+        .condition-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .condition-option {
+            position: relative;
+        }
+
+        .condition-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .condition-label {
+            display: block;
+            padding: 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            background: #f8fafc;
+        }
+
+        .condition-label:hover {
+            border-color: var(--primary-red);
+            background: rgba(220, 38, 38, 0.1);
+        }
+
+        .condition-option input[type="radio"]:checked+.condition-label {
+            border-color: var(--primary-red);
+            background: rgba(220, 38, 38, 0.15);
+            box-shadow: 0 0 0 3px var(--glow-red);
+        }
+
+        .condition-label.critical {
+            color: var(--primary-red-light);
+        }
+
+        .condition-label.normal {
+            color: var(--accent-green);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 6px 20px var(--glow-red);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px var(--glow-red);
+        }
+
+        .error-message {
+            color: var(--primary-red-light);
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.05) 100%);
+            color: #15803d;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 32px 24px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .hospital-icon {
+                width: 70px;
+                height: 70px;
+            }
+
+            .hospital-icon svg {
+                width: 40px;
+                height: 40px;
+            }
+
+            .condition-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-animation">
+        <div class="pulse-circle pulse-1"></div>
+        <div class="pulse-circle pulse-2"></div>
+        <div class="pulse-circle pulse-3"></div>
+    </div>
+
+    <div class="form-container">
+        <div class="header">
+            <div class="hospital-icon">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M19 3H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 11h-4v4h-4v-4H6v-4h4V6h4v4h4v4z" />
+                </svg>
+            </div>
+            <h1>Hospital Blood Request</h1>
+            <p class="subtitle">Request blood for emergency cases</p>
+            <span class="hospital-badge">🏥 Hospital Portal</span>
+        </div>
+
+        <div class="info-box">
+            <p><strong>Note:</strong> When you submit this request, donors within <strong>30 KM</strong> of your
+                hospital who match the blood type will be instantly notified by email with the location link and
+                estimated travel time.</p>
+        </div>
+
+        <form id="hospitalForm">
+            <div class="form-group">
+                <label for="patientName">Patient Name <span class="required">*</span></label>
+                <input type="text" id="patientName" name="patientName" placeholder="Enter patient's full name" required>
+                <div class="error-message" id="patientNameError">Please enter patient name</div>
+            </div>
+
+            <div class="form-group">
+                <label for="bloodType">Blood Group Required <span class="required">*</span></label>
+                <select id="bloodType" name="bloodType" required>
+                    <option value="">Select blood group</option>
+                    <option value="A+">A+ (A Positive)</option>
+                    <option value="A-">A- (A Negative)</option>
+                    <option value="B+">B+ (B Positive)</option>
+                    <option value="B-">B- (B Negative)</option>
+                    <option value="AB+">AB+ (AB Positive)</option>
+                    <option value="AB-">AB- (AB Negative)</option>
+                    <option value="O+">O+ (O Positive)</option>
+                    <option value="O-">O- (O Negative)</option>
+                    <option value="Any">Any (Universal)</option>
+                </select>
+                <div class="error-message" id="bloodTypeError">Please select blood group</div>
+            </div>
+
+            <div class="form-group">
+                <label for="units">Required Units <span class="required">*</span></label>
+                <input type="number" id="units" name="units" placeholder="Enter number of units" min="1" max="20"
+                    required>
+                <div class="error-message" id="unitsError">Please enter required units (1-20)</div>
+            </div>
+
+            <div class="form-group">
+                <label>Patient Condition <span class="required">*</span></label>
+                <div class="condition-selector">
+                    <div class="condition-option">
+                        <input type="radio" id="critical" name="condition" value="critical" required>
+                        <label for="critical" class="condition-label critical">🚨 Critical</label>
+                    </div>
+                    <div class="condition-option">
+                        <input type="radio" id="normal" name="condition" value="normal">
+                        <label for="normal" class="condition-label normal">✓ Normal</label>
+                    </div>
+                </div>
+                <div class="error-message" id="conditionError">Please select patient condition</div>
+            </div>
+
+            <div class="form-group">
+                <label for="requiredTime">Required By (Time) <span class="required">*</span></label>
+                <input type="time" id="requiredTime" name="requiredTime" required>
+                <div class="error-message" id="timeError">Please select required time</div>
+            </div>
+
+            <div class="form-group">
+                <label for="contact">Contact Number <span class="required">*</span></label>
+                <input type="text" id="contact" name="contact" placeholder="Hospital contact number" required>
+                <div class="error-message" id="contactError">Please enter contact number</div>
+            </div>
+
+            <div class="form-group">
+                <label for="hospitalLocation">Hospital Location <span class="required">*</span></label>
+                <div style="display: flex; gap: 10px; align-items: stretch;">
+                    <input type="text" id="hospitalLocation" name="hospitalLocation"
+                        placeholder="Click 'Use Location' button" readonly required style="flex: 1;">
+                    <input type="hidden" id="lat" name="lat">
+                    <input type="hidden" id="lng" name="lng">
+                    <button type="button" id="useLocationBtn" class="location-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            style="width: 18px; height: 18px;">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <line x1="12" y1="2" x2="12" y2="6"></line>
+                            <line x1="12" y1="18" x2="12" y2="22"></line>
+                            <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                            <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                            <line x1="2" y1="12" x2="6" y2="12"></line>
+                            <line x1="18" y1="12" x2="22" y2="12"></line>
+                            <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                            <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                        </svg>
+                        Use Location
+                    </button>
+                </div>
+                <div class="error-message" id="locationError">Please allow location access</div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                🚨 Send Emergency Alert
+            </button>
+
+            <div class="success-message" id="successMessage">
+                ✓ Emergency request sent! Verified donors within 30KM are being notified.
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('hospitalForm');
+        const successMessage = document.getElementById('successMessage');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Geolocation Functionality
+        const locationInput = document.getElementById('hospitalLocation');
+        const useLocationBtn = document.getElementById('useLocationBtn');
+        let hospitalLocation = null;
+
+        useLocationBtn.addEventListener('click', () => { detectLocation(); });
+
+        function detectLocation() {
+            if (!navigator.geolocation) {
+                alert('Geolocation not supported by your browser.');
+                return;
+            }
+            locationInput.value = 'Detecting location...';
+            useLocationBtn.disabled = true;
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    hospitalLocation = { lat, lon };
+
+                    // Store as Google Maps link
+                    const mapsLink = `https://www.google.com/maps?q=${lat},${lon}`;
+                    locationInput.value = mapsLink;
+
+                    // Store raw coords in hidden fields
+                    document.getElementById('lat').value = lat;
+                    document.getElementById('lng').value = lon;
+
+                    document.getElementById('locationError').style.display = 'none';
+                    useLocationBtn.disabled = false;
+                },
+                (error) => {
+                    locationInput.value = '';
+                    locationInput.placeholder = 'Location access denied';
+                    useLocationBtn.disabled = false;
+                    if (error.code === error.PERMISSION_DENIED) {
+                        alert('Please allow location access to use this feature');
+                    }
+                }
+            );
+        }
+
+        // Form submission — wired to backend
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            document.querySelectorAll('.error-message').forEach(msg => msg.style.display = 'none');
+
+            let isValid = true;
+
+            const patientName = document.getElementById('patientName').value.trim();
+            if (!patientName) { document.getElementById('patientNameError').style.display = 'block'; isValid = false; }
+
+            const bloodType = document.getElementById('bloodType').value;
+            if (!bloodType) { document.getElementById('bloodTypeError').style.display = 'block'; isValid = false; }
+
+            const units = document.getElementById('units').value;
+            if (!units || units < 1 || units > 20) { document.getElementById('unitsError').style.display = 'block'; isValid = false; }
+
+            const condition = document.querySelector('input[name="condition"]:checked');
+            if (!condition) { document.getElementById('conditionError').style.display = 'block'; isValid = false; }
+
+            const requiredTime = document.getElementById('requiredTime').value;
+            if (!requiredTime) { document.getElementById('timeError').style.display = 'block'; isValid = false; }
+
+            const contact = document.getElementById('contact').value.trim();
+            if (!contact) { document.getElementById('contactError').style.display = 'block'; isValid = false; }
+
+            const location = document.getElementById('hospitalLocation').value;
+            if (!location || !hospitalLocation) { document.getElementById('locationError').style.display = 'block'; isValid = false; }
+
+            if (!isValid) return;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Sending alerts...';
+
+            const fd = new FormData();
+            fd.append('patientName', patientName);
+            fd.append('bloodType', bloodType);
+            fd.append('unitsNeeded', units);
+            fd.append('condition', condition.value);
+            fd.append('requiredTime', requiredTime);
+            fd.append('contact', contact);
+            fd.append('location', location);
+            fd.append('lat', document.getElementById('lat').value);
+            fd.append('lng', document.getElementById('lng').value);
+
+            try {
+                const res = await fetch('/api/emergency', { method: 'POST', body: fd });
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    successMessage.innerHTML = `✓ Alert sent! <strong>${data.notified_count || 0} donor(s)</strong> notified. Redirecting to status page...`;
+                    successMessage.style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = `request_status.html?id=${data.id}`;
+                    }, 1500);
+                } else {
+                    alert('Error: ' + (data.error || 'Submission failed'));
+                }
+            } catch (err) {
+                alert('Cannot connect to server. Make sure Flask is running.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🚨 Send Emergency Alert';
+            }
+        });
+
+        // Real-time validation clear
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('input', function () {
+                const errorEl = document.getElementById(this.id + 'Error');
+                if (errorEl && this.value.trim() !== '') errorEl.style.display = 'none';
+            });
+        });
+
+        document.querySelectorAll('input[name="condition"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                document.getElementById('conditionError').style.display = 'none';
+            });
+        });
+    </script>
+</body>
+
+</html>

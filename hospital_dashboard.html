@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloodBridge - Hospital Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #dc2626;
+            --primary-red-dark: #b91c1c;
+            --primary-red-light: #ef4444;
+            --accent-blue: #2563eb;
+            --bg-dark: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --success-green: #16a34a;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f1f5f9;
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .nav-logo svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--primary-red);
+        }
+
+        .nav-user {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--primary-red-light);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(220, 38, 38, 0.2);
+        }
+
+        /* Main Container */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 32px;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Quick Action */
+        .action-card {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(185, 28, 28, 0.05) 100%);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+        }
+
+        .action-text h3 {
+            font-size: 18px;
+            color: var(--primary-red-light);
+            margin-bottom: 4px;
+        }
+
+        .action-text p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .add-request-btn {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .add-request-btn:hover {
+            background: var(--primary-red-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        }
+
+        /* Request List */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .request-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .req-info h4 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .req-info p {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .blood-badge {
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--primary-red-light);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 13px;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+        }
+
+        .status-badge {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-blue);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        /* Sidebar Profile */
+        .profile-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-blue);
+            margin-bottom: 16px;
+        }
+
+        .profile-card h3 {
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .profile-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .hospital-details {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        .detail-item {
+            margin-bottom: 12px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="login.html" class="nav-logo">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2C12 2 6 8 6 13C6 16.31 8.69 19 12 19C15.31 19 18 16.31 18 13C18 8 12 2 12 2Z" />
+            </svg>
+            BloodBridge
+        </a>
+        <div class="nav-user">
+            <span class="user-name" id="navUserName">Loading...</span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="dashboard-container">
+
+        <!-- Left Column -->
+        <div class="main-content">
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="activeRequestsCount">0</div>
+                    <div class="stat-label">Active Requests</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">--</div> <!-- Placeholder -->
+                    <div class="stat-label">Fulfilled</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: var(--success-green);">Active</div>
+                    <div class="stat-label">Account Status</div>
+                </div>
+            </div>
+
+            <div class="action-card">
+                <div class="action-text">
+                    <h3>Need Blood Urgently?</h3>
+                    <p>Create a new emergency request to alert donors nearby.</p>
+                </div>
+                <a href="hospital_emergency_request.html" class="add-request-btn">
+                    <span>+</span> Create Request
+                </a>
+            </div>
+
+            <div class="section-header">
+                <div class="section-title">
+                    <span>🚨</span> Your Emergency Requests
+                </div>
+            </div>
+
+            <div id="requestsList">
+                <div class="empty-state">
+                    Loading requests...
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column: Profile -->
+        <div class="sidebar">
+            <div class="profile-card">
+                <img src="" alt="Staff" class="profile-img" id="staffPhoto">
+                <h3 id="staffName">Loading...</h3>
+                <p id="staffRole">Hospital Staff</p>
+
+                <div class="hospital-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Hospital Name</span>
+                        <div class="detail-value" id="hospitalName">...</div>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Contact</span>
+                        <div class="detail-value" id="hospitalContact">...</div>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Email</span>
+                        <div class="detail-value" id="staffEmail">...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', fetchDashboardData);
+
+        async function fetchDashboardData() {
+            try {
+                const res = await fetch('/api/hospital/dashboard');
+                if (res.status === 401) {
+                    window.location.href = 'hospital_staff_login.html';
+                    return;
+                }
+
+                const data = await res.json();
+
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                populateDashboard(data);
+
+            } catch (err) {
+                console.error(err);
+                alert('Failed to load dashboard data');
+            }
+        }
+
+        function populateDashboard(data) {
+            const user = data.staff;
+            const requests = data.requests;
+
+            // Profile
+            document.getElementById('navUserName').textContent = user.staffName;
+            document.getElementById('staffName').textContent = user.staffName;
+            document.getElementById('hospitalName').textContent = user.hospitalName;
+            document.getElementById('hospitalContact').textContent = user.hospitalContact;
+            document.getElementById('staffEmail').textContent = user.staffEmail;
+            document.getElementById('staffPhoto').src = user.staffIdUrl || `https://ui-avatars.com/api/?name=${user.staffName}&background=3b82f6&color=fff`;
+
+            // Stats
+            document.getElementById('activeRequestsCount').textContent = requests.length;
+
+            const statusBox = document.querySelector('.stat-card:nth-child(3) .stat-value');
+            statusBox.textContent = user.status || 'Pending';
+
+            // Status Colors
+            if (user.status === 'Approved') statusBox.style.color = 'var(--success-green)';
+            else if (user.status === 'Rejected') statusBox.style.color = 'var(--primary-red)';
+            else statusBox.style.color = 'orange'; // Pending
+
+            // Strict Approval Logic: Disable "Create Request" if not Approved
+            const createBtn = document.querySelector('.add-request-btn');
+            const actionText = document.querySelector('.action-text p');
+
+            if (user.status !== 'Approved') {
+                createBtn.style.opacity = '0.5';
+                createBtn.style.cursor = 'not-allowed';
+                createBtn.style.background = 'var(--text-muted)';
+                createBtn.innerHTML = '<span>🔒</span> Approval Required';
+                createBtn.href = '#';
+
+                // Prevent click
+                createBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    alert('Your account is Pending or Rejected. You cannot raise emergency requests yet.');
+                });
+
+                actionText.textContent = 'Account pending approval. Emergency requests are disabled.';
+                actionText.style.color = 'orange';
+            }
+
+
+            // Requests List
+            const listContainer = document.getElementById('requestsList');
+            if (requests && requests.length > 0) {
+                listContainer.innerHTML = requests.map(r => `
+                    <div class="request-card">
+                        <div class="req-info">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                                <h4>${r.patientName} (${r.age})</h4>
+                                <span class="blood-badge">${r.bloodType}</span>
+                                <span class="status-badge">${r.status || 'Active'}</span>
+                            </div>
+                            <p>${r.reason} • ${r.units} Units</p>
+                            <p style="font-size: 11px; margin-top: 4px; opacity: 0.6;">Created: ${new Date(r.createdAt * 1000).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                listContainer.innerHTML = `
+                    <div class="empty-state">
+                        No active emergency requests found.
+                    </div>
+                `;
+            }
+        }
+
+        function logout() {
+            window.location.href = 'hospital_staff_login.html';
+        }
+    </script>
+</body>
+
+</html>

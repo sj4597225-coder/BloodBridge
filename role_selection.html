@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Role - BloodBridge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #dc2626;
+            --primary-red-dark: #b91c1c;
+            --primary-red-light: #ef4444;
+            --accent-blue: #2563eb;
+            --accent-blue-dark: #1d4ed8;
+            --accent-green: #16a34a;
+            --bg-light: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --glow-red: rgba(220, 38, 38, 0.15);
+            --glow-blue: rgba(37, 99, 235, 0.15);
+            --glow-green: rgba(22, 163, 74, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #fef2f2 0%, #f1f5f9 50%, #eff6ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .pulse-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--glow-red) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        .pulse-1 {
+            width: 400px;
+            height: 400px;
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .pulse-2 {
+            width: 500px;
+            height: 500px;
+            bottom: -150px;
+            right: -150px;
+            background: radial-gradient(circle, var(--glow-blue) 0%, transparent 70%);
+            animation-delay: 2s;
+        }
+
+        .pulse-3 {
+            width: 300px;
+            height: 300px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: 4s;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 0.6;
+            }
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+        }
+
+        /* Role Selection Card */
+        .role-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 48px 40px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 20px 40px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Logo Section */
+        .logo-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-light) 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 10px 30px var(--glow-red);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .logo-icon svg {
+            width: 45px;
+            height: 45px;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .app-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--primary-red-light) 0%, var(--accent-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .app-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* Role Selection Title */
+        .selection-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .selection-title h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .selection-title p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Button Container */
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Role Buttons */
+        .role-btn {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 24px;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .role-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .role-btn:hover::before {
+            left: 100%;
+        }
+
+        .role-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .role-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .role-content {
+            flex: 1;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .role-title {
+            font-size: 18px;
+            font-weight: 600;
+            display: block;
+        }
+
+        .role-description {
+            font-size: 13px;
+            font-weight: 400;
+            opacity: 0.7;
+            display: block;
+        }
+
+        .role-arrow {
+            font-size: 24px;
+            transition: transform 0.3s ease;
+            opacity: 0.5;
+        }
+
+        .role-btn:hover .role-arrow {
+            transform: translateX(5px);
+            opacity: 1;
+        }
+
+        .role-btn:hover .role-icon {
+            transform: scale(1.1);
+        }
+
+        /* Hospital Button */
+        .role-btn.hospital {
+            border-color: var(--accent-blue);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%);
+        }
+
+        .role-btn.hospital:hover {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(37, 99, 235, 0.1) 100%);
+            border-color: var(--accent-blue);
+            box-shadow: 0 10px 30px var(--glow-blue);
+            transform: translateY(-3px);
+        }
+
+        .role-btn.hospital .role-icon {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 15px var(--glow-blue);
+        }
+
+        .role-btn.hospital:hover .role-icon {
+            box-shadow: 0 6px 20px var(--glow-blue);
+        }
+
+        /* Donor Button */
+        .role-btn.donor {
+            border-color: var(--primary-red);
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(185, 28, 28, 0.05) 100%);
+        }
+
+        .role-btn.donor:hover {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.2) 0%, rgba(185, 28, 28, 0.1) 100%);
+            border-color: var(--primary-red-light);
+            box-shadow: 0 10px 30px var(--glow-red);
+            transform: translateY(-3px);
+        }
+
+        .role-btn.donor .role-icon {
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 15px var(--glow-red);
+        }
+
+        .role-btn.donor:hover .role-icon {
+            box-shadow: 0 6px 20px var(--glow-red);
+        }
+
+        /* Admin Button */
+        .role-btn.admin {
+            border-color: var(--accent-green);
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.05) 100%);
+        }
+
+        .role-btn.admin:hover {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(22, 163, 74, 0.1) 100%);
+            border-color: var(--accent-green);
+            box-shadow: 0 10px 30px var(--glow-green);
+            transform: translateY(-3px);
+        }
+
+        .role-btn.admin .role-icon {
+            background: linear-gradient(135deg, var(--accent-green) 0%, #16a34a 100%);
+            color: white;
+            box-shadow: 0 4px 15px var(--glow-green);
+        }
+
+        .role-btn.admin:hover .role-icon {
+            box-shadow: 0 6px 20px var(--glow-green);
+        }
+
+        /* Back Button */
+        .back-btn {
+            display: block;
+            text-align: center;
+            margin-top: 24px;
+            padding: 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: #f1f5f9;
+            border: 1px solid var(--border-color);
+        }
+
+        .back-btn:hover {
+            color: var(--text-primary);
+            background: #e2e8f0;
+            border-color: var(--text-muted);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                max-width: 100%;
+                padding: 16px;
+            }
+
+            .role-card {
+                padding: 32px 24px;
+            }
+
+            .app-title {
+                font-size: 28px;
+            }
+
+            .role-btn {
+                padding: 16px 20px;
+            }
+
+            .role-title {
+                font-size: 16px;
+            }
+
+            .role-description {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-icon {
+                width: 60px;
+                height: 60px;
+            }
+
+            .logo-icon svg {
+                width: 35px;
+                height: 35px;
+            }
+
+            .app-title {
+                font-size: 24px;
+            }
+
+            .role-icon {
+                width: 40px;
+                height: 40px;
+            }
+
+            .role-icon svg {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-animation">
+        <div class="pulse-circle pulse-1"></div>
+        <div class="pulse-circle pulse-2"></div>
+        <div class="pulse-circle pulse-3"></div>
+    </div>
+
+    <div class="container">
+        <div class="role-card">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                            fill="currentColor" />
+                    </svg>
+                </div>
+                <h1 class="app-title">BloodBridge</h1>
+                <p class="app-subtitle">Connecting Lives, Saving Futures</p>
+            </div>
+
+            <div class="selection-title">
+                <h2>Select Your Role</h2>
+                <p>Choose how you want to access the platform</p>
+            </div>
+
+            <div class="button-container">
+                <a href="hospital_portal_landing.html" class="role-btn hospital">
+                    <div class="role-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M19 3H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 11h-4v4h-4v-4H6v-4h4V6h4v4h4v4z" />
+                        </svg>
+                    </div>
+                    <div class="role-content">
+                        <span class="role-title">Hospital Login</span>
+                        <span class="role-description"></span>
+                    </div>
+                    <div class="role-arrow">→</div>
+                </a>
+
+                <a href="donor_portal.html" class="role-btn donor">
+                    <div class="role-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M12 2C12 2 6 8 6 13C6 16.31 8.69 19 12 19C15.31 19 18 16.31 18 13C18 8 12 2 12 2Z" />
+                        </svg>
+                    </div>
+                    <div class="role-content">
+                        <span class="role-title">Donor Login</span>
+                        <span class="role-description"></span>
+                    </div>
+                    <div class="role-arrow">→</div>
+                </a>
+
+                <a href="#" class="role-btn admin" onclick="handleAdminLogin(event)">
+                    <div class="role-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" />
+                        </svg>
+                    </div>
+                    <div class="role-content">
+                        <span class="role-title">Admin Login</span>
+                        <span class="role-description"></span>
+                    </div>
+                    <div class="role-arrow">→</div>
+                </a>
+            </div>
+
+            <a href="login.html" class="back-btn">
+                ← Go Back
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Add entrance animation on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const roleCard = document.querySelector('.role-card');
+
+            roleCard.style.opacity = '0';
+            roleCard.style.transform = 'translateY(30px)';
+
+            setTimeout(() => {
+                roleCard.style.transition = 'all 0.6s ease';
+                roleCard.style.opacity = '1';
+                roleCard.style.transform = 'translateY(0)';
+            }, 100);
+        });
+
+        // Handle admin login
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            window.location.href = 'admin_login.html';
+        }
+
+        // Add click animation
+        document.querySelectorAll('.role-btn').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+    </script>
+</body>
+
+</html>

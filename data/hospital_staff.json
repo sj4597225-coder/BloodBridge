@@ -1,0 +1,41 @@
+[
+  {
+    "id": "54f5d54a",
+    "hospitalName": "Lakshay kumar",
+    "hospitalContact": "+919465335501",
+    "staffName": "fwaf",
+    "staffContact": "+919465335501",
+    "staffEmail": "lakshaykumar9530@gmail.com",
+    "location": "chander lok colony new shubash nagar street no 9",
+    "staffIdFile": "fb0038c4_IMG-20240914-WA00011.jpg",
+    "staffIdUrl": "/uploads/hospital_staff/fb0038c4_IMG-20240914-WA00011.jpg",
+    "status": "Approved",
+    "createdAt": "2026-02-19 12:57:53"
+  },
+  {
+    "id": "bb5e5c2c",
+    "hospitalName": "Namanpreet kaur",
+    "hospitalContact": "9318760967",
+    "staffName": "namanpreet",
+    "staffContact": "9318760967",
+    "staffEmail": "namanpreet064@gmail.com",
+    "location": "jkgiu",
+    "staffIdFile": "e341a568_DONT.jpg",
+    "staffIdUrl": "/uploads/hospital_staff/e341a568_DONT.jpg",
+    "status": "Approved",
+    "createdAt": "2026-02-19 12:58:41"
+  },
+  {
+    "id": "02a11ec4",
+    "hospitalName": "Gulzar hospital",
+    "hospitalContact": "9318760967",
+    "staffName": "namanpreet",
+    "staffContact": "9318760967",
+    "staffEmail": "namanpreet064@gmail.com",
+    "location": "khanna",
+    "staffIdFile": "932813fd_download.jpeg",
+    "staffIdUrl": "/uploads/hospital_staff/932813fd_download.jpeg",
+    "status": "Pending",
+    "createdAt": "2026-02-19 19:46:16"
+  }
+]
